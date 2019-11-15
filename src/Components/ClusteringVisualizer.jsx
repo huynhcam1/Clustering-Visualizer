@@ -5,8 +5,6 @@ class ClusteringVisualizer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			x: 30, // x: 0 range: (30, width-10)
-			y: 32, // y: 10 range: (height-30, 32)
 			type: 'scatter',
 			data: {
 				datasets: [{
@@ -18,9 +16,15 @@ class ClusteringVisualizer extends Component {
 						x: 2,
 						y: 2
 					}, {
-						x: 3,
+						x: 3.5,
 						y: 3
-					}]
+					}, {
+						x: 3.6,
+						y: 3
+					}],
+					pointBackgroundColor: 'rgba(0, 0, 255, 1)',
+					pointHoverRadius: 5,
+					pointRadius: 5
 				}]
 			},
 			options: {
@@ -41,27 +45,34 @@ class ClusteringVisualizer extends Component {
 			}
 		};
 
-		this.add = true;
+		this.removedPoint = false;
 		this.chartReference = {};
 		this.onMouseClick = this.onMouseClick.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(this.chartReference);
+		console.log(this.chartReference.chartInstance);
 	}
 
 	onMouseClick(e) {
-		//this.setState({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
-		//console.log(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-		if (this.add) {
-			this.addData('Scatter Dataset', { x: 1, y: 10 });
-			console.log("add");
-			this.add = true;
+		if (!this.removedPoint) {
+			const chart = this.chartReference.chartInstance;
+			// scale event's x-value to chart's x-value
+			const x_offset = chart.chartArea.left;
+			const width = chart.chartArea.right - x_offset;
+			const x = e.nativeEvent.offsetX - x_offset;
+			const chart_x = x / width * 10; // chart_width == 10
+			// scale event's y-value to chart's y-value
+			const y_offset = chart.chartArea.top;
+			const height = chart.chartArea.bottom - y_offset;
+			const y = e.nativeEvent.offsetY - y_offset;
+			const chart_y = y / height * 10; // chart_height == 10
+			this.addData(chart, 'Scatter Dataset', { x: chart_x.toFixed(2), y: (10 - chart_y).toFixed(2) });
+			console.log("added (" + chart_x.toFixed(2) + ", " + (10 - chart_y).toFixed(2) + ")");
 		}
 	}
 
-	addData(label, data) {
-		const chart = this.chartReference.chartInstance;
+	addData(chart, label, data) {
 		chart.data.labels.push(label);
 		chart.data.datasets.forEach((dataset) => {
 			dataset.data.push(data);
@@ -72,20 +83,20 @@ class ClusteringVisualizer extends Component {
 	removeData(elems) {
 		if (elems[0] === undefined) {
 			console.log("nothing there");
-			this.add = true;
+			this.removedPoint = false;
 		} else {
 			const index = elems[0]._index;
 			console.log(index);
 			const chart = this.chartReference.chartInstance;
 			chart.data.datasets[0].data.splice(index, 1); // 0 default until i add example datasets
 			chart.update();
-			this.add = false;
+			this.removedPoint = true;
 		}
 	}
 
 	render() {
 		return (
-			<div className='chart' onClick={this.add ? this.onMouseClick : undefined} >
+			<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
 				<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { this.removeData(elems); }} />
 			</div>
 		);
