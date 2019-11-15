@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "50e3702a4fe868e3b3d528aafc8f637d",
+    "revision": "ee93cc51b2467d5f0e7e7385995b7b22",
     "url": "/Clustering-Visualizer/index.html"
   },
   {
-    "revision": "2c2125ee27fd91511137",
+    "revision": "9d12779c7ddd6f0d7d63",
     "url": "/Clustering-Visualizer/static/css/main.b100e6da.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Clustering-Visualizer/static/js/2.9b749bba.chunk.js"
   },
   {
-    "revision": "2c2125ee27fd91511137",
-    "url": "/Clustering-Visualizer/static/js/main.6a5babb6.chunk.js"
+    "revision": "9d12779c7ddd6f0d7d63",
+    "url": "/Clustering-Visualizer/static/js/main.bfae0a38.chunk.js"
   },
   {
     "revision": "72c1a13fb7251be8adec",

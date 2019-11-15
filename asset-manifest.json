@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Clustering-Visualizer/static/css/main.b100e6da.chunk.css",
-    "main.js": "/Clustering-Visualizer/static/js/main.6a5babb6.chunk.js",
-    "main.js.map": "/Clustering-Visualizer/static/js/main.6a5babb6.chunk.js.map",
+    "main.js": "/Clustering-Visualizer/static/js/main.bfae0a38.chunk.js",
+    "main.js.map": "/Clustering-Visualizer/static/js/main.bfae0a38.chunk.js.map",
     "runtime-main.js": "/Clustering-Visualizer/static/js/runtime-main.80f9aef5.js",
     "runtime-main.js.map": "/Clustering-Visualizer/static/js/runtime-main.80f9aef5.js.map",
     "static/js/2.9b749bba.chunk.js": "/Clustering-Visualizer/static/js/2.9b749bba.chunk.js",
     "static/js/2.9b749bba.chunk.js.map": "/Clustering-Visualizer/static/js/2.9b749bba.chunk.js.map",
     "index.html": "/Clustering-Visualizer/index.html",
-    "precache-manifest.c1db7c9772c37a87d8d5c06d930fc6b6.js": "/Clustering-Visualizer/precache-manifest.c1db7c9772c37a87d8d5c06d930fc6b6.js",
+    "precache-manifest.d3c12e0c1dbab53b315118d1e8fcca74.js": "/Clustering-Visualizer/precache-manifest.d3c12e0c1dbab53b315118d1e8fcca74.js",
     "service-worker.js": "/Clustering-Visualizer/service-worker.js",
     "static/css/main.b100e6da.chunk.css.map": "/Clustering-Visualizer/static/css/main.b100e6da.chunk.css.map"
   },
@@ -16,6 +16,6 @@
     "static/js/runtime-main.80f9aef5.js",
     "static/js/2.9b749bba.chunk.js",
     "static/css/main.b100e6da.chunk.css",
-    "static/js/main.6a5babb6.chunk.js"
+    "static/js/main.bfae0a38.chunk.js"
   ]
 }
