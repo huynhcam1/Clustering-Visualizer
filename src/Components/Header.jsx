@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
-import Data from './Data';
+import ClusteringVisualizer from './ClusteringVisualizer';
 
 class Header extends Component {
 	constructor(props) {
@@ -13,14 +13,14 @@ class Header extends Component {
 	}
 
 	componentDidMount() {
-		console.log(Data.prototype);
-		Data.prototype.plotUNVotes();
+		console.log(ClusteringVisualizer.prototype);
+		ClusteringVisualizer.prototype.plotUNVotes();
 	}
 
 	handleSubmit(e) {
 		if (this.state.algorithm === 'unvotes') {
 			console.log("unvotes");
-			//Data.plotUNVotes();
+			ClusteringVisualizer.prototype.plotUNVotes(); // will change state of data
 		}
 		e.preventDefault();
 	}
