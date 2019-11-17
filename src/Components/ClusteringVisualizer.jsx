@@ -10,6 +10,8 @@ class ClusteringVisualizer extends Component {
 
 	removedPoint = false;
 
+	algorithm = 'none'
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -52,11 +54,26 @@ class ClusteringVisualizer extends Component {
 				}
 			}
 		};
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 		this.onMouseClick = this.onMouseClick.bind(this);
 	}
 
 	componentDidMount() {
-		//console.log(this.chartReference.chartInstance);
+		//console.log(this.props.state);
+	}
+
+	handleSubmit(e) {
+		if (this.algorithm === 'unvotes') {
+			//ClusteringVisualizer.prototype.plotUNVotes(); // will change state of data
+		}
+		alert(this.algorithm);
+		e.preventDefault();
+	}
+
+	handleChange(e) {
+		this.algorithm = e.target.value;
+		console.log(e.target.value);
 	}
 
 	onMouseClick(e) {
@@ -108,8 +125,23 @@ class ClusteringVisualizer extends Component {
 
 	render() {
 		return (
-			<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
-				<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { this.removeData(elems); }} />
+			<div className="App-header">
+				<div className='header' onSubmit={this.handleSubmit} >
+					<h1>Clustering Visualizer</h1>
+					<form onChange={this.handleChange}>
+						<label>
+							Example Datasets:
+						<select width={100} height={100}>
+								<option value="none">None</option>
+								<option value="unvotes">UN Votes</option>
+							</select>
+						</label>
+						<input type="submit" value="Submit" />
+					</form>
+				</div>
+				<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
+					<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { this.removeData(elems); }} />
+				</div>
 			</div>
 		);
 	}
