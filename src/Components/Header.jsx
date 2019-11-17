@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Header.css';
+import Data from './Data';
 
 class Header extends Component {
 	constructor(props) {
@@ -12,13 +13,14 @@ class Header extends Component {
 	}
 
 	componentDidMount() {
-		//console.log(this);
+		console.log(Data.prototype);
+		Data.prototype.plotUNVotes();
 	}
 
 	handleSubmit(e) {
 		if (this.state.algorithm === 'unvotes') {
 			console.log("unvotes");
-			this.plotUNVotes();
+			//Data.plotUNVotes();
 		}
 		e.preventDefault();
 	}
@@ -26,8 +28,6 @@ class Header extends Component {
 	handleChange(e) {
 		this.setState({ algorithm: e.target.value });
 	}
-
-	plotUNVotes() { }
 
 	render() {
 		return (

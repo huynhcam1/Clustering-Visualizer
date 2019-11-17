@@ -66,14 +66,17 @@ class ClusteringVisualizer extends Component {
 			const x_offset = chart.chartArea.left;
 			const width = chart.chartArea.right - x_offset;
 			const x = e.nativeEvent.offsetX - x_offset;
-			const chart_x = x / width * this.MAX_WIDTH;
+			const chart_x = (x / width * this.MAX_WIDTH).toFixed(2);
 			// scale event's y-value to chart's y-value
 			const y_offset = chart.chartArea.top;
 			const height = chart.chartArea.bottom - y_offset;
 			const y = e.nativeEvent.offsetY - y_offset;
-			const chart_y = y / height * this.MAX_HEIGHT;
-			this.addData(chart, 'Scatter Dataset', { x: chart_x.toFixed(2), y: (this.MAX_HEIGHT - chart_y).toFixed(2) });
-			console.log("added (" + chart_x.toFixed(2) + ", " + (10 - chart_y).toFixed(2) + ")");
+			const chart_y = (this.MAX_HEIGHT - y / height * this.MAX_HEIGHT).toFixed(2);
+			// check if chart_x and chart_y are within visible plot width, then add to plot
+			if (chart_y <= this.MAX_WIDTH && chart_y <= this.MAX_HEIGHT) {
+				this.addData(chart, 'Scatter Dataset', { x: chart_x, y: chart_y });
+				console.log("added (" + chart_x + ", " + chart_y + ")");
+			}
 		}
 	}
 
