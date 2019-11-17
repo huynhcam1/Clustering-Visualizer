@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
+import './ClusteringVisualizer.css';
 import { Scatter } from 'react-chartjs-2';
 
 class ClusteringVisualizer extends Component {
+	chartReference = {};
+
+	MAX_WIDTH = 30;
+	MAX_HEIGHT = 30;
+
+	removedPoint = false;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -32,26 +40,23 @@ class ClusteringVisualizer extends Component {
 					xAxes: [{
 						ticks: {
 							min: 0,
-							max: 10
+							max: this.MAX_WIDTH
 						}
 					}],
 					yAxes: [{
 						ticks: {
 							min: 0,
-							max: 10
+							max: this.MAX_HEIGHT
 						}
 					}]
 				}
 			}
 		};
-
-		this.removedPoint = false;
-		this.chartReference = {};
 		this.onMouseClick = this.onMouseClick.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(this.chartReference.chartInstance);
+		//console.log(this.chartReference.chartInstance);
 	}
 
 	onMouseClick(e) {
@@ -61,13 +66,13 @@ class ClusteringVisualizer extends Component {
 			const x_offset = chart.chartArea.left;
 			const width = chart.chartArea.right - x_offset;
 			const x = e.nativeEvent.offsetX - x_offset;
-			const chart_x = x / width * 10; // chart_width == 10
+			const chart_x = x / width * this.MAX_WIDTH;
 			// scale event's y-value to chart's y-value
 			const y_offset = chart.chartArea.top;
 			const height = chart.chartArea.bottom - y_offset;
 			const y = e.nativeEvent.offsetY - y_offset;
-			const chart_y = y / height * 10; // chart_height == 10
-			this.addData(chart, 'Scatter Dataset', { x: chart_x.toFixed(2), y: (10 - chart_y).toFixed(2) });
+			const chart_y = y / height * this.MAX_HEIGHT;
+			this.addData(chart, 'Scatter Dataset', { x: chart_x.toFixed(2), y: (this.MAX_HEIGHT - chart_y).toFixed(2) });
 			console.log("added (" + chart_x.toFixed(2) + ", " + (10 - chart_y).toFixed(2) + ")");
 		}
 	}
