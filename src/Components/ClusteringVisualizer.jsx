@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './ClusteringVisualizer.css';
 import { Scatter } from 'react-chartjs-2';
+import UNVotes from '../Data/UN_Votes_MDS.json';
 
 class ClusteringVisualizer extends Component {
 	chartReference = {};
 
 	MAX_WIDTH = 30;
-	MAX_HEIGHT = 30;
+	MAX_HEIGHT = 16;
 
 	removedPoint = false;
 
@@ -20,17 +21,17 @@ class ClusteringVisualizer extends Component {
 				datasets: [{
 					label: 'Scatter Dataset',
 					data: [{
-						x: 1,
-						y: 1
+						//x: 1,
+						//y: 1
 					}, {
-						x: 2,
-						y: 2
+						//x: 2,
+						//y: 2
 					}, {
-						x: 3.5,
-						y: 3
+						//x: 3.5,
+						//y: 3
 					}, {
-						x: 3.6,
-						y: 3
+						//x: 3.6,
+						//y: 3
 					}],
 					pointBackgroundColor: 'rgba(0, 0, 255, 1)',
 					pointHoverRadius: 5,
@@ -60,14 +61,13 @@ class ClusteringVisualizer extends Component {
 	}
 
 	componentDidMount() {
-		//console.log(this.props.state);
+		console.log(UNVotes);
 	}
 
 	handleSubmit(e) {
 		if (this.algorithm === 'unvotes') {
-			//ClusteringVisualizer.prototype.plotUNVotes(); // will change state of data
+			this.plotUNVotes(); // will change state of data
 		}
-		alert(this.algorithm);
 		e.preventDefault();
 	}
 
@@ -120,7 +120,13 @@ class ClusteringVisualizer extends Component {
 	}
 
 	plotUNVotes() {
+		const chart = this.chartReference.chartInstance;
 		console.log("plot unvotes");
+		UNVotes.forEach((data) => {
+			chart.data.datasets[0].data.push(data);
+			console.log(data);
+		});
+		chart.update();
 	}
 
 	render() {
