@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import './ClusteringVisualizer.css';
 import { Scatter } from 'react-chartjs-2';
+import Data from './Data';
 
 class ClusteringVisualizer extends Component {
 	chartReference = {};
 
 	MAX_WIDTH = 30;
 	MAX_HEIGHT = 30;
-
-	removedPoint = false;
 
 	constructor(props) {
 		super(props);
@@ -60,7 +59,7 @@ class ClusteringVisualizer extends Component {
 	}
 
 	onMouseClick(e) {
-		if (!this.removedPoint) {
+		if (!Data.prototype.removedPoint) {
 			const chart = this.chartReference.chartInstance;
 			// scale event's x-value to chart's x-value
 			const x_offset = chart.chartArea.left;
@@ -74,7 +73,7 @@ class ClusteringVisualizer extends Component {
 			const chart_y = (this.MAX_HEIGHT - y / height * this.MAX_HEIGHT).toFixed(2);
 			// check if chart_x and chart_y are within visible plot width, then add to plot
 			if (chart_y <= this.MAX_WIDTH && chart_y <= this.MAX_HEIGHT) {
-				this.addData(chart, 'Scatter Dataset', { x: chart_x, y: chart_y });
+				Data.prototype.addData(chart, 'Scatter Dataset', { x: chart_x, y: chart_y });
 				console.log("added (" + chart_x + ", " + chart_y + ")");
 			}
 		}
@@ -88,24 +87,10 @@ class ClusteringVisualizer extends Component {
 		chart.update();
 	}
 
-	removeData(elems) {
-		if (elems[0] === undefined) {
-			console.log("nothing there");
-			this.removedPoint = false;
-		} else {
-			const index = elems[0]._index;
-			console.log(index);
-			const chart = this.chartReference.chartInstance;
-			chart.data.datasets[0].data.splice(index, 1); // 0 default until i add example datasets
-			chart.update();
-			this.removedPoint = true;
-		}
-	}
-
 	render() {
 		return (
-			<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
-				<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { this.removeData(elems); }} />
+			<div className='chart' onClick={!Data.prototype.removedPoint ? this.onMouseClick : undefined} >
+				<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { Data.prototype.removeData(elems, this.chartReference.chartInstance); }} />
 			</div>
 		);
 	}
