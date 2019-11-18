@@ -21,17 +21,17 @@ class ClusteringVisualizer extends Component {
 				datasets: [{
 					label: 'Scatter Dataset',
 					data: [{
-						//x: 1,
-						//y: 1
+						x: 1,
+						y: 1
 					}, {
-						//x: 2,
-						//y: 2
+						x: 2,
+						y: 2
 					}, {
-						//x: 3.5,
-						//y: 3
+						x: 3.5,
+						y: 3
 					}, {
-						//x: 3.6,
-						//y: 3
+						x: 3.6,
+						y: 3
 					}],
 					pointBackgroundColor: 'rgba(0, 0, 255, 1)',
 					pointHoverRadius: 5,
@@ -61,7 +61,7 @@ class ClusteringVisualizer extends Component {
 	}
 
 	componentDidMount() {
-		console.log(UNVotes);
+		//console.log(this.state.data.datasets[0].data.length);
 	}
 
 	handleSubmit(e) {
@@ -121,25 +121,47 @@ class ClusteringVisualizer extends Component {
 
 	plotUNVotes() {
 		const chart = this.chartReference.chartInstance;
-		console.log("plot unvotes");
+		// clear previous data
+		while (this.state.data.datasets[0].data.length > 0) {
+			chart.data.labels.pop();
+			chart.data.datasets.forEach((dataset) => {
+				dataset.data.pop();
+			});
+		}
+		let count = 0;
 		UNVotes.forEach((data) => {
-			chart.data.datasets[0].data.push(data);
-			console.log(data);
+			setTimeout(() => {
+				chart.data.datasets[0].data.push(data);
+				chart.update();
+			}, 25 * count);
+			count++;
+			console.log(count);
 		});
-		chart.update();
 	}
 
 	render() {
 		return (
-			<div className="App-header">
-				<div className='header' onSubmit={this.handleSubmit} >
-					<h1>Clustering Visualizer</h1>
+			<div className="header">
+				<h1>Clustering Visualizer</h1>
+				<div className='datasets' onSubmit={this.handleSubmit} >
 					<form onChange={this.handleChange}>
 						<label>
 							Example Datasets:
 						<select width={100} height={100}>
 								<option value="none">None</option>
 								<option value="unvotes">UN Votes</option>
+							</select>
+						</label>
+						<input type="submit" value="Submit" />
+					</form>
+				</div>
+				<div className='algorithms' onSubmit={this.handleSubmit} >
+					<form onChange={this.handleChange}>
+						<label>
+							Algorithms:
+						<select width={100} height={100}>
+								<option value="none">None</option>
+								<option value="em">EM Algorithm</option>
 							</select>
 						</label>
 						<input type="submit" value="Submit" />
