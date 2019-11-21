@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './ClusteringVisualizer.css';
 import { Scatter } from 'react-chartjs-2';
+import EM from '../Algorithms/EM.js';
 import UNVotes from '../Data/UN_Votes_MDS.json';
 
 class ClusteringVisualizer extends Component {
@@ -11,7 +12,9 @@ class ClusteringVisualizer extends Component {
 
 	removedPoint = false;
 
-	algorithm = 'none'
+	algorithm = 'none';
+
+	seed = 1;
 
 	constructor(props) {
 		super(props);
@@ -58,10 +61,14 @@ class ClusteringVisualizer extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.onMouseClick = this.onMouseClick.bind(this);
+		this.changeColor = this.changeColor.bind(this);
 	}
 
 	componentDidMount() {
-		//console.log(this.state.data.datasets[0].data.length);
+		EM.prototype.algorithm(3,77);
+		//for (let k = 0; k < 10; k++) {
+		//	console.log(this.psora(k, this.seed));
+		//}
 	}
 
 	handleSubmit(e) {
@@ -91,14 +98,47 @@ class ClusteringVisualizer extends Component {
 			const chart_y = (this.MAX_HEIGHT - y / height * this.MAX_HEIGHT).toFixed(2);
 			// check if chart_x and chart_y are within visible plot width, then add to plot
 			if (chart_y <= this.MAX_WIDTH && chart_y <= this.MAX_HEIGHT) {
-				this.addData(chart, 'Scatter Dataset', { x: chart_x, y: chart_y });
+				this.addData(chart, { x: chart_x, y: chart_y });
 				console.log("added (" + chart_x + ", " + chart_y + ")");
 			}
 		}
 	}
 
-	addData(chart, label, data) {
-		chart.data.labels.push(label);
+	changeColor() {
+		const chart = this.chartReference.chartInstance;
+		let count = 1;
+		const r = 1;
+		const g = 255;
+		const b = 203;
+		chart.data.datasets.push(
+			{
+				label: 'Cluster ' + count,
+				data: [{
+					x: 7,
+					y: 7
+				}, {
+					x: 9,
+					y: 9
+				}, {
+					x: 10.5,
+					y: 10
+				}, {
+					x: 15.6,
+					y: 15
+				}],
+				pointBackgroundColor: 'rgba(' + r + ', ' + g + ',' + b + ', 1)',
+				pointHoverRadius: 5,
+				pointRadius: 5
+			});
+		chart.update();
+	}
+
+	psora(k, n) {
+		const r = Math.PI * (k ^ n);
+		return r - Math.floor(r);
+	}
+
+	addData(chart, data) {
 		chart.data.datasets.forEach((dataset) => {
 			dataset.data.push(data);
 		});
@@ -110,9 +150,9 @@ class ClusteringVisualizer extends Component {
 			console.log("nothing there");
 			this.removedPoint = false;
 		} else {
+			const chart = this.chartReference.chartInstance;
 			const index = elems[0]._index;
 			console.log(index);
-			const chart = this.chartReference.chartInstance;
 			chart.data.datasets[0].data.splice(index, 1); // 0 default until i add example datasets
 			chart.update();
 			this.removedPoint = true;
@@ -143,6 +183,7 @@ class ClusteringVisualizer extends Component {
 		return (
 			<div className="header">
 				<h1>Clustering Visualizer</h1>
+				<button type="button" onClick={this.changeColor}>Click Me!</button>
 				<div className='datasets' onSubmit={this.handleSubmit} >
 					<form onChange={this.handleChange}>
 						<label>
