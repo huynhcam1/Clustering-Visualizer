@@ -12,6 +12,7 @@ class ClusteringVisualizer extends Component {
 
 	removedPoint = false;
 
+	dataset = 'none';
 	algorithm = 'none';
 
 	seed = 1;
@@ -58,27 +59,41 @@ class ClusteringVisualizer extends Component {
 				}
 			}
 		};
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmitDataset = this.handleSubmitDataset.bind(this);
+		this.handleChangeDataset = this.handleChangeDataset.bind(this);
+		this.handleSubmitAlgorithm = this.handleSubmitAlgorithm.bind(this);
+		this.handleChangeAlgorithm = this.handleChangeAlgorithm.bind(this);
 		this.onMouseClick = this.onMouseClick.bind(this);
 		this.changeColor = this.changeColor.bind(this);
 	}
 
 	componentDidMount() {
-		EM.prototype.algorithm(3,77);
+		console.log(this.chartReference.chartInstance.data.datasets[0].data.length);
 		//for (let k = 0; k < 10; k++) {
 		//	console.log(this.psora(k, this.seed));
 		//}
 	}
 
-	handleSubmit(e) {
-		if (this.algorithm === 'unvotes') {
+	handleSubmitDataset(e) {
+		if (this.dataset === 'unvotes') {
 			this.plotUNVotes(); // will change state of data
 		}
 		e.preventDefault();
 	}
 
-	handleChange(e) {
+	handleChangeDataset(e) {
+		this.dataset = e.target.value;
+		console.log(e.target.value);
+	}
+
+	handleSubmitAlgorithm(e) {
+		if (this.algorithm === 'em') {
+			EM.prototype.algorithm(this.chartReference.chartInstance, 3, 6);
+		}
+		e.preventDefault();
+	}
+
+	handleChangeAlgorithm(e) {
 		this.algorithm = e.target.value;
 		console.log(e.target.value);
 	}
@@ -184,8 +199,8 @@ class ClusteringVisualizer extends Component {
 			<div className="header">
 				<h1>Clustering Visualizer</h1>
 				<button type="button" onClick={this.changeColor}>Click Me!</button>
-				<div className='datasets' onSubmit={this.handleSubmit} >
-					<form onChange={this.handleChange}>
+				<div className='datasets' onSubmit={this.handleSubmitDataset} >
+					<form onChange={this.handleChangeDataset}>
 						<label>
 							Example Datasets:
 						<select width={100} height={100}>
@@ -196,8 +211,8 @@ class ClusteringVisualizer extends Component {
 						<input type="submit" value="Submit" />
 					</form>
 				</div>
-				<div className='algorithms' onSubmit={this.handleSubmit} >
-					<form onChange={this.handleChange}>
+				<div className='algorithms' onSubmit={this.handleSubmitAlgorithm} >
+					<form onChange={this.handleChangeAlgorithm}>
 						<label>
 							Algorithms:
 						<select width={100} height={100}>
