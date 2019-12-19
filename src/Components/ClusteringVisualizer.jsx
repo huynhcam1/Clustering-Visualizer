@@ -71,7 +71,7 @@ class ClusteringVisualizer extends Component {
 	}
 
 	componentDidMount() {
-		console.log(this.chartReference.chartInstance.data.datasets[0].pointBackgroundColor[0]);
+		console.log(this.chartReference.chartInstance.data.datasets[0].data.length);
 		//for (let k = 0; k < 10; k++) {
 		//	console.log(this.psora(k, this.seed));
 		//}
@@ -91,11 +91,15 @@ class ClusteringVisualizer extends Component {
 
 	handleSubmitAlgorithm(e) {
 		if (this.algorithm === 'kmeans') {
-			const array = KMeans.prototype.algorithm(this.chartReference.chartInstance, 3, 77);
+			const k = 3;
+			const n = this.chartReference.chartInstance.data.datasets[0].data.length;
+			const array = KMeans.prototype.algorithm(this.chartReference.chartInstance, k, n);
 			console.log(array);
 			this.changeColor(this.chartReference.chartInstance, array);
 		} else if (this.algorithm === 'em') {
-			EM.prototype.algorithm(this.chartReference.chartInstance, 3, 6);
+			const k = 3;
+			const n = 6;
+			EM.prototype.algorithm(this.chartReference.chartInstance, k, n);
 		}
 		e.preventDefault();
 	}
@@ -120,7 +124,7 @@ class ClusteringVisualizer extends Component {
 			const chart_y = (this.MAX_HEIGHT - y / height * this.MAX_HEIGHT).toFixed(2);
 			// check if chart_x and chart_y are within visible plot width, then add to plot
 			if (chart_y <= this.MAX_WIDTH && chart_y <= this.MAX_HEIGHT) {
-				this.addData(chart, { x: chart_x, y: chart_y });
+				this.addData(chart, { x: parseFloat(chart_x), y: parseFloat(chart_y) });
 				console.log("added (" + chart_x + ", " + chart_y + ")");
 			}
 		}
@@ -147,7 +151,7 @@ class ClusteringVisualizer extends Component {
 	addData(chart, data) {
 		chart.data.datasets.forEach((dataset) => {
 			dataset.data.push(data);
-			dataset.pointBackgroundColor.push('Green');
+			dataset.pointBackgroundColor.push('Blue');
 		});
 		chart.update();
 	}
@@ -161,6 +165,7 @@ class ClusteringVisualizer extends Component {
 			const index = elems[0]._index;
 			console.log(index);
 			chart.data.datasets[0].data.splice(index, 1); // 0 default until i add example datasets
+			chart.data.datasets[0].pointBackgroundColor.splice(index, 1);
 			chart.update();
 			this.removedPoint = true;
 		}
@@ -173,6 +178,7 @@ class ClusteringVisualizer extends Component {
 			chart.data.labels.pop();
 			chart.data.datasets.forEach((dataset) => {
 				dataset.data.pop();
+				dataset.pointBackgroundColor.pop();
 			});
 		}
 		let count = 0;

@@ -2,7 +2,7 @@ class KMeans {
 	algorithm(chart, k, n) {
 		const data = [];
 		this.dataToArray(chart, data, n, k);
-		// console.log(data);
+		console.log(data);
 		const array = [];
 		this.repeatRange(array, k, n);
 		this.shuffle(array);
@@ -19,15 +19,17 @@ class KMeans {
 			const centroids = [];
 			for (let i = 1; i <= k; i++) {
 				// copy array
-				const temp = data.slice();
+				const temp = [];
 				for (let j = 0; j < n; j++) {
-					if (array[j] !== i) {
-						temp[j] = [0, 0];
+					if (array[j] === i) {
+						temp.push(data[j]);
+					} else {
+						temp.push([0, 0]);
 					}
 				}
 				centroids.push(this.colSums(temp, 2, n));
-				centroids[i - 1][0] /= gammasColSum[i - 1];
-				centroids[i - 1][1] /= gammasColSum[i - 1];
+				centroids[i-1][0] /= gammasColSum[i-1];
+				centroids[i-1][1] /= gammasColSum[i-1];
 			}
 			// console.log(centroids);
 			for (let i = 0; i < n; i++) {
@@ -42,15 +44,13 @@ class KMeans {
 					distances.push(distance);
 				}
 				// find min distance and change point to new k value
-				let index = 0;
 				let min = Number.MAX_VALUE;
 				for (let k = 0; k < distances.length; k++) {
 					if (distances[k] < min) {
-						index = k;
+						array[i] = k + 1;
 						min = distances[k];
 					}
 				}
-				array[i] = index + 1;
 			}
 		}
 		return array;
