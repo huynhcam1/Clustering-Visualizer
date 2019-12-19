@@ -1,21 +1,21 @@
 {
   "files": {
     "main.css": "/Clustering-Visualizer/static/css/main.e8cb8c5d.chunk.css",
-    "main.js": "/Clustering-Visualizer/static/js/main.e80f4086.chunk.js",
-    "main.js.map": "/Clustering-Visualizer/static/js/main.e80f4086.chunk.js.map",
+    "main.js": "/Clustering-Visualizer/static/js/main.0085f456.chunk.js",
+    "main.js.map": "/Clustering-Visualizer/static/js/main.0085f456.chunk.js.map",
     "runtime-main.js": "/Clustering-Visualizer/static/js/runtime-main.80f9aef5.js",
     "runtime-main.js.map": "/Clustering-Visualizer/static/js/runtime-main.80f9aef5.js.map",
-    "static/js/2.07355fc4.chunk.js": "/Clustering-Visualizer/static/js/2.07355fc4.chunk.js",
-    "static/js/2.07355fc4.chunk.js.map": "/Clustering-Visualizer/static/js/2.07355fc4.chunk.js.map",
+    "static/js/2.fc14c7ec.chunk.js": "/Clustering-Visualizer/static/js/2.fc14c7ec.chunk.js",
+    "static/js/2.fc14c7ec.chunk.js.map": "/Clustering-Visualizer/static/js/2.fc14c7ec.chunk.js.map",
     "index.html": "/Clustering-Visualizer/index.html",
-    "precache-manifest.337988baac0e00facbe34026caaaddf4.js": "/Clustering-Visualizer/precache-manifest.337988baac0e00facbe34026caaaddf4.js",
+    "precache-manifest.c5fe6493e4043e5a17d00068bd55642f.js": "/Clustering-Visualizer/precache-manifest.c5fe6493e4043e5a17d00068bd55642f.js",
     "service-worker.js": "/Clustering-Visualizer/service-worker.js",
     "static/css/main.e8cb8c5d.chunk.css.map": "/Clustering-Visualizer/static/css/main.e8cb8c5d.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.80f9aef5.js",
-    "static/js/2.07355fc4.chunk.js",
+    "static/js/2.fc14c7ec.chunk.js",
     "static/css/main.e8cb8c5d.chunk.css",
-    "static/js/main.e80f4086.chunk.js"
+    "static/js/main.0085f456.chunk.js"
   ]
 }
