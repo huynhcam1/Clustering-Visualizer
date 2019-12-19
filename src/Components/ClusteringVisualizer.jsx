@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import './ClusteringVisualizer.css';
 import { Scatter } from 'react-chartjs-2';
-import EM from '../Algorithms/EM.js';
+// datasets
 import UNVotes from '../Data/UN_Votes_MDS.json';
+// algorithms
+import KMeans from '../Algorithms/KMeans.js';
+import EM from '../Algorithms/EM.js';
 
 class ClusteringVisualizer extends Component {
 	chartReference = {};
@@ -37,7 +40,7 @@ class ClusteringVisualizer extends Component {
 						x: 3.6,
 						y: 3
 					}],
-					pointBackgroundColor: 'rgba(0, 0, 255, 1)',
+					pointBackgroundColor: ['Blue', 'Blue', 'Blue', 'Blue'],
 					pointHoverRadius: 5,
 					pointRadius: 5
 				}]
@@ -68,7 +71,7 @@ class ClusteringVisualizer extends Component {
 	}
 
 	componentDidMount() {
-		console.log(this.chartReference.chartInstance.data.datasets[0].data.length);
+		console.log(this.chartReference.chartInstance.data.datasets[0].pointBackgroundColor[0]);
 		//for (let k = 0; k < 10; k++) {
 		//	console.log(this.psora(k, this.seed));
 		//}
@@ -87,7 +90,11 @@ class ClusteringVisualizer extends Component {
 	}
 
 	handleSubmitAlgorithm(e) {
-		if (this.algorithm === 'em') {
+		if (this.algorithm === 'kmeans') {
+			const array = KMeans.prototype.algorithm(this.chartReference.chartInstance, 3, 77);
+			console.log(array);
+			this.changeColor(this.chartReference.chartInstance, array);
+		} else if (this.algorithm === 'em') {
 			EM.prototype.algorithm(this.chartReference.chartInstance, 3, 6);
 		}
 		e.preventDefault();
@@ -119,32 +126,16 @@ class ClusteringVisualizer extends Component {
 		}
 	}
 
-	changeColor() {
-		const chart = this.chartReference.chartInstance;
-		let count = 1;
-		const r = 1;
-		const g = 255;
-		const b = 203;
-		chart.data.datasets.push(
-			{
-				label: 'Cluster ' + count,
-				data: [{
-					x: 7,
-					y: 7
-				}, {
-					x: 9,
-					y: 9
-				}, {
-					x: 10.5,
-					y: 10
-				}, {
-					x: 15.6,
-					y: 15
-				}],
-				pointBackgroundColor: 'rgba(' + r + ', ' + g + ',' + b + ', 1)',
-				pointHoverRadius: 5,
-				pointRadius: 5
-			});
+	changeColor(chart, array) {
+		for (let i = 0; i < array.length; i++) {
+			if (array[i] === 1) {
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Green';
+			} else if (array[i] === 2) {
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Red';
+			} else {
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Purple';
+			}
+		}
 		chart.update();
 	}
 
@@ -156,6 +147,7 @@ class ClusteringVisualizer extends Component {
 	addData(chart, data) {
 		chart.data.datasets.forEach((dataset) => {
 			dataset.data.push(data);
+			dataset.pointBackgroundColor.push('Green');
 		});
 		chart.update();
 	}
@@ -187,6 +179,7 @@ class ClusteringVisualizer extends Component {
 		UNVotes.forEach((data) => {
 			setTimeout(() => {
 				chart.data.datasets[0].data.push(data);
+				chart.data.datasets[0].pointBackgroundColor.push('Blue');
 				chart.update();
 			}, 25 * count);
 			count++;
@@ -194,11 +187,15 @@ class ClusteringVisualizer extends Component {
 		});
 	}
 
+	testButton() {
+		console.log("for testing only");
+	}
+
 	render() {
 		return (
 			<div className="header">
 				<h1>Clustering Visualizer</h1>
-				<button type="button" onClick={this.changeColor}>Click Me!</button>
+				<button type="button" onClick={this.testButton}>test button</button>
 				<div className='datasets' onSubmit={this.handleSubmitDataset} >
 					<form onChange={this.handleChangeDataset}>
 						<label>
@@ -217,7 +214,8 @@ class ClusteringVisualizer extends Component {
 							Algorithms:
 						<select width={100} height={100}>
 								<option value="none">None</option>
-								<option value="em">EM Algorithm</option>
+								<option value="kmeans">K-Means</option>
+								<option value="em">EM</option>
 							</select>
 						</label>
 						<input type="submit" value="Submit" />

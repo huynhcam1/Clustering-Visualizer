@@ -11,7 +11,7 @@ class EM {
 		for (let j = 0; j < n; j++) {
 			gammas[j][array[j]-1] = 1;
 		}
-		console.log(gammas);
+		// console.log(gammas);
 		const gammasColSum = this.colSums(gammas, k, n);
 		// console.log(gammasColSum);
 		const gammasCount = [];
@@ -39,15 +39,21 @@ class EM {
 		// console.log(mus);
 		// console.log(sigmas);
 		// console.log(sigmas[0]);
-		let covariance = [];
-		this.zeros(covariance, 2, 2);
-		for (let i = 0; i < 2; i++) {
-			for (let j = 0; j < n; j++) {
-				covariance[i][0] += sigmas[0][j][i] * data[j][0];
-				covariance[i][1] += sigmas[0][j][i] * data[j][1];
+		for (let h = 0; h < 3; h++) {
+			let covariance = [];
+			this.zeros(covariance, 2, 2);
+			for (let i = 0; i < 2; i++) {
+				for (let j = 0; j < n; j++) {
+					covariance[i][0] += sigmas[h][j][i] * data[j][0];
+					covariance[i][1] += sigmas[h][j][i] * data[j][1];
+				}
+				covariance[i][0] /= gammasColSum[1];
+				covariance[i][1] /= gammasColSum[1];
 			}
+			sigmas[h] = covariance;
 		}
-		console.log(covariance);
+		console.log(sigmas);
+		
 	}
 
 	dataToArray(chart, data, n, k) {
