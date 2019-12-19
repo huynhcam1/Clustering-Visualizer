@@ -38,7 +38,7 @@ class KMeans {
 					// get euclidean distances
 					let x = data[i][0] - centroids[j][0];
 					x *= x;
-					let y = data[i][0] - centroids[j][0];
+					let y = data[i][1] - centroids[j][1];
 					y *= y;
 					let distance = Math.sqrt(x + y);
 					distances.push(distance);
