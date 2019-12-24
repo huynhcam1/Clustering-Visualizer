@@ -8,16 +8,22 @@ import KMeans from '../Algorithms/KMeans.js';
 import EM from '../Algorithms/EM.js';
 
 class ClusteringVisualizer extends Component {
+	// initialize chart
 	chartReference = {};
 
+	// set plot width and height boundaries
 	MAX_WIDTH = 30;
 	MAX_HEIGHT = 16;
 
+	// value to determine whether a point is being removed onClick to prevent adding after removed point
 	removedPoint = false;
 
+	// initialize dataset, algorithm, and cluster count variables as none
 	dataset = 'none';
 	algorithm = 'none';
+	clusterCount = 1;
 
+	// for randomization (CURRENTLY NOT NEEDED)
 	seed = 1;
 
 	constructor(props) {
@@ -62,21 +68,25 @@ class ClusteringVisualizer extends Component {
 				}
 			}
 		};
+		// bind functions that HTML references
 		this.handleSubmitDataset = this.handleSubmitDataset.bind(this);
 		this.handleChangeDataset = this.handleChangeDataset.bind(this);
 		this.handleSubmitAlgorithm = this.handleSubmitAlgorithm.bind(this);
 		this.handleChangeAlgorithm = this.handleChangeAlgorithm.bind(this);
+		this.handleChangeClusterCount = this.handleChangeClusterCount.bind(this);
 		this.onMouseClick = this.onMouseClick.bind(this);
 		this.changeColor = this.changeColor.bind(this);
+		this.toggleDropDownMenu = this.toggleDropDownMenu.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(this.chartReference.chartInstance.data.datasets[0].data.length);
+		console.log(document.getElementsByClassName("dropbtn")[0]);
 		//for (let k = 0; k < 10; k++) {
 		//	console.log(this.psora(k, this.seed));
 		//}
 	}
 
+	// when the button for dataset is submitted, plot data for selected dataset
 	handleSubmitDataset(e) {
 		if (this.dataset === 'unvotes') {
 			this.plotUNVotes(); // will change state of data
@@ -87,17 +97,19 @@ class ClusteringVisualizer extends Component {
 	handleChangeDataset(e) {
 		this.dataset = e.target.value;
 		console.log(e.target.value);
+		this.toggleDropDownMenu(0);
 	}
 
+	// when the button for algorithms is submitted, cluster the current data based on the selected algorithm
 	handleSubmitAlgorithm(e) {
 		if (this.algorithm === 'kmeans') {
-			const k = 3;
+			const k = this.clusterCount;
 			const n = this.chartReference.chartInstance.data.datasets[0].data.length;
 			const array = KMeans.prototype.algorithm(this.chartReference.chartInstance, k, n);
 			console.log(array);
 			this.changeColor(this.chartReference.chartInstance, array);
 		} else if (this.algorithm === 'em') {
-			const k = 3;
+			const k = this.clusterCount;
 			const n = 6;
 			EM.prototype.algorithm(this.chartReference.chartInstance, k, n);
 		}
@@ -107,8 +119,16 @@ class ClusteringVisualizer extends Component {
 	handleChangeAlgorithm(e) {
 		this.algorithm = e.target.value;
 		console.log(e.target.value);
+		this.toggleDropDownMenu(1);
 	}
 
+	handleChangeClusterCount(e) {
+		this.clusterCount = e.target.value;
+		console.log(e.target.value);
+		this.toggleDropDownMenu(2);
+	}
+
+	// when mouse is clicked on the graph, scale mouse coordinates to match graph axis
 	onMouseClick(e) {
 		if (!this.removedPoint) {
 			const chart = this.chartReference.chartInstance;
@@ -130,24 +150,27 @@ class ClusteringVisualizer extends Component {
 		}
 	}
 
+	// change color for each point to match differentiate the clusters
 	changeColor(chart, array) {
 		for (let i = 0; i < array.length; i++) {
 			if (array[i] === 1) {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Green';
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Blue';
 			} else if (array[i] === 2) {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Red';
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Green';
 			} else {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Purple';
+				chart.data.datasets[0].pointBackgroundColor[i] = 'Red';
 			}
 		}
 		chart.update();
 	}
 
+	// for randomization (NOT CURRENTLY USED)
 	psora(k, n) {
 		const r = Math.PI * (k ^ n);
 		return r - Math.floor(r);
 	}
 
+	// addData runs after removeData
 	addData(chart, data) {
 		chart.data.datasets.forEach((dataset) => {
 			dataset.data.push(data);
@@ -156,6 +179,7 @@ class ClusteringVisualizer extends Component {
 		chart.update();
 	}
 
+	// removes data from chart if there exists in datapoint when clicked
 	removeData(elems) {
 		if (elems[0] === undefined) {
 			console.log("nothing there");
@@ -193,40 +217,48 @@ class ClusteringVisualizer extends Component {
 		});
 	}
 
-	testButton() {
-		console.log("for testing only");
+	toggleDropDownMenu(index) {
+		var x = document.getElementsByClassName("dropdown-content");
+		if (x[index].style.display === 'block') {
+			x[index].style.display = 'none';
+		} else {
+			x[index].style.display = 'block';
+		}
 	}
 
 	render() {
 		return (
 			<div className="header">
 				<h1>Clustering Visualizer</h1>
-				<button type="button" onClick={this.testButton}>test button</button>
-				<div className='datasets' onSubmit={this.handleSubmitDataset} >
-					<form onChange={this.handleChangeDataset}>
-						<label>
-							Example Datasets:
-						<select width={100} height={100}>
-								<option value="none">None</option>
-								<option value="unvotes">UN Votes</option>
-							</select>
-						</label>
-						<input type="submit" value="Submit" />
-					</form>
-				</div>
-				<div className='algorithms' onSubmit={this.handleSubmitAlgorithm} >
-					<form onChange={this.handleChangeAlgorithm}>
-						<label>
-							Algorithms:
-						<select width={100} height={100}>
-								<option value="none">None</option>
-								<option value="kmeans">K-Means</option>
-								<option value="em">EM</option>
-							</select>
-						</label>
-						<input type="submit" value="Submit" />
-					</form>
-				</div>
+				<ul>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={() => this.toggleDropDownMenu(0)}>Datasets</option>
+						<div className="dropdown-content">
+							<button type="button" value="unvotes" onClick={this.handleChangeDataset}> UN Votes </button>
+						</div>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={this.handleSubmitDataset}>Visualize!</option>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={() => this.toggleDropDownMenu(1)}>Algorithms</option>
+						<div className="dropdown-content">
+							<button type="button" value="kmeans" onClick={this.handleChangeAlgorithm}>K-Means</button>
+							<button type="button" value="em" onClick={this.handleChangeAlgorithm}>Expectation-Maximization (in progress)</button>
+						</div>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={() => this.toggleDropDownMenu(2)}>Cluster Count</option>
+						<div className="dropdown-content">
+							<button type="button" value="1" onClick={this.handleChangeClusterCount}>1</button>
+							<button type="button" value="2" onClick={this.handleChangeClusterCount}>2</button>
+							<button type="button" value="3" onClick={this.handleChangeClusterCount}>3</button>
+						</div>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={this.handleSubmitAlgorithm}>Cluster!</option>
+					</li>
+				</ul>
 				<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
 					<Scatter ref={(reference) => this.chartReference = reference} data={this.state.data} options={this.state.options} onElementsClick={(elems) => { this.removeData(elems); }} />
 				</div>
