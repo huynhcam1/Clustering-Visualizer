@@ -77,10 +77,12 @@ class ClusteringVisualizer extends Component {
 		this.onMouseClick = this.onMouseClick.bind(this);
 		this.changeColor = this.changeColor.bind(this);
 		this.toggleDropDownMenu = this.toggleDropDownMenu.bind(this);
+		this.clearData = this.clearData.bind(this);
+		this.debugButton = this.debugButton.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(document.getElementsByClassName("dropbtn")[0]);
+		console.log(document.getElementsByClassName("dropbtn")[0].style);
 		//for (let k = 0; k < 10; k++) {
 		//	console.log(this.psora(k, this.seed));
 		//}
@@ -152,16 +154,20 @@ class ClusteringVisualizer extends Component {
 
 	// change color for each point to match differentiate the clusters
 	changeColor(chart, array) {
+		let count = 0;
 		for (let i = 0; i < array.length; i++) {
-			if (array[i] === 1) {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Blue';
-			} else if (array[i] === 2) {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Green';
-			} else {
-				chart.data.datasets[0].pointBackgroundColor[i] = 'Red';
-			}
+			setTimeout(() => {
+				if (array[i] === 1) {
+					chart.data.datasets[0].pointBackgroundColor[i] = 'Blue';
+				} else if (array[i] === 2) {
+					chart.data.datasets[0].pointBackgroundColor[i] = 'Green';
+				} else {
+					chart.data.datasets[0].pointBackgroundColor[i] = 'Red';
+				}
+				chart.update();
+			}, 25 * count);
+			count++;
 		}
-		chart.update();
 	}
 
 	// for randomization (NOT CURRENTLY USED)
@@ -197,14 +203,7 @@ class ClusteringVisualizer extends Component {
 
 	plotUNVotes() {
 		const chart = this.chartReference.chartInstance;
-		// clear previous data
-		while (this.state.data.datasets[0].data.length > 0) {
-			chart.data.labels.pop();
-			chart.data.datasets.forEach((dataset) => {
-				dataset.data.pop();
-				dataset.pointBackgroundColor.pop();
-			});
-		}
+		this.clearData();
 		let count = 0;
 		UNVotes.forEach((data) => {
 			setTimeout(() => {
@@ -213,17 +212,40 @@ class ClusteringVisualizer extends Component {
 				chart.update();
 			}, 25 * count);
 			count++;
-			console.log(count);
 		});
 	}
 
-	toggleDropDownMenu(index) {
-		var x = document.getElementsByClassName("dropdown-content");
-		if (x[index].style.display === 'block') {
-			x[index].style.display = 'none';
-		} else {
-			x[index].style.display = 'block';
+	// clear all data
+	clearData() {
+		const chart = this.chartReference.chartInstance;
+		while (this.state.data.datasets[0].data.length > 0) {
+			chart.data.labels.pop();
+			chart.data.datasets.forEach((dataset) => {
+				dataset.data.pop();
+				dataset.pointBackgroundColor.pop();
+			});
 		}
+		chart.update();
+	}
+
+	toggleDropDownMenu(index) {
+		const x = document.getElementsByClassName("dropdown-content");
+		for (let i = 0; i < 3; i++) {
+			if (i === index) {
+				if (x[i].style.display === 'block') {
+					x[i].style.display = 'none';
+				} else {
+					x[i].style.display = 'block';
+				}
+			} else {
+				x[i].style.display = 'none';
+			}
+		}
+		
+	}
+
+	debugButton() {
+		document.getElementsByClassName("dropbtn")[0].firstChild.data = "UN Votes";
 	}
 
 	render() {
@@ -239,6 +261,12 @@ class ClusteringVisualizer extends Component {
 					</li>
 					<li className="dropdown">
 						<option className="dropbtn" onClick={this.handleSubmitDataset}>Visualize!</option>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={this.clearData}>Clear Graph</option>
+					</li>
+					<li className="dropdown">
+						<a className="blank"></a>
 					</li>
 					<li className="dropdown">
 						<option className="dropbtn" onClick={() => this.toggleDropDownMenu(1)}>Algorithms</option>
@@ -257,6 +285,9 @@ class ClusteringVisualizer extends Component {
 					</li>
 					<li className="dropdown">
 						<option className="dropbtn" onClick={this.handleSubmitAlgorithm}>Cluster!</option>
+					</li>
+					<li className="dropdown">
+						<option className="dropbtn" onClick={this.debugButton}>Debug Button (do not click)</option>
 					</li>
 				</ul>
 				<div className='chart' onClick={!this.removedPoint ? this.onMouseClick : undefined} >
